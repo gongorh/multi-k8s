@@ -1,0 +1,22 @@
+language: generic
+services:
+  - docker
+
+before_install:
+  - docker build -t gongorh/react-test -f ./client/Dockerfile.dev ./client/
+
+script:
+  - docker run -e CI=true gongorh/react-test npm test
+
+after_success:
+  - docker build -t gongorh/mutli-client ./client
+  - docker build -t gongorh/multi-nginx ./nginx
+  - docker build -t gongorh/multi-server ./server
+  - docker build -t gongorh/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u " $DOCKER_ID" --password-stdin
+  # Take those images and push them to docker pub
+  - docker push gongorh/multi-client
+  - docker push gongorh/multi-nginx
+  - docker push gongorh/multi-server
+  - docker push gongorh/multi-worker
