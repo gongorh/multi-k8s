@@ -9,7 +9,7 @@ script:
   - docker run -e CI=true gongorh/react-test npm test
 
 after_success:
-  - docker build -t gongorh/mutli-client ./client
+  - docker build -t gongorh/multi-client ./client
   - docker build -t gongorh/multi-nginx ./nginx
   - docker build -t gongorh/multi-server ./server
   - docker build -t gongorh/multi-worker ./worker
